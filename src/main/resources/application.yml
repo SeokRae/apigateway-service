@@ -1,0 +1,29 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    # 비동기 방식으로 서비스가 동작하기 때문에 Netty 로 서비스가 구동이 됨
+    gateway:
+      routes:
+        # first-service
+        - id: first-service
+          # forwarding 될 url 경로
+          uri: lb://first-service
+          # path 정보 condition
+          predicates:
+            - Path=/first-service/**
+        # user-service
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/**
