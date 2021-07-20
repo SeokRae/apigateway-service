@@ -15,15 +15,40 @@ spring:
     # 비동기 방식으로 서비스가 동작하기 때문에 Netty 로 서비스가 구동이 됨
     gateway:
       routes:
-        # first-service
-        - id: first-service
-          # forwarding 될 url 경로
-          uri: lb://first-service
-          # path 정보 condition
-          predicates:
-            - Path=/first-service/**
-        # user-service
+        # user-service POST (로그인)
         - id: user-service
-          uri: lb://user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/login
+            - Method=POST
+          # uri 에서 서비스 부분 필터링하는 필터
+          filters:
+            # POST로 들어오는 요청은 새로운 요청으로 처리할 수 있도록 Cookie 삭제
+            - RemoveRequestHeader=Cookie
+            # 사용자의 요청을 변경하는 처리
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-service POST (회원가입)
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # user-service GET
+        - id: user-service
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+#      default-filters:
+#        - name: GlobalFilter
+#          args:
+#            baseMessage: Spring Cloud Gateway GlobalFilter
+#            preLogger: true
+#            postLogger: true
