@@ -45,6 +45,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - CustomAuthorizationHeaderFilter
 
 #      default-filters:
 #        - name: GlobalFilter
@@ -52,3 +53,6 @@ spring:
 #            baseMessage: Spring Cloud Gateway GlobalFilter
 #            preLogger: true
 #            postLogger: true
+
+token:
+  secret: user_token
