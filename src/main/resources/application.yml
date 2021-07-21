@@ -8,6 +8,13 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
 
+management:
+  endpoints:
+    web:
+      exposure:
+        # refresh: 설정정보 갱신, health: 앱 어플 상태 확인, httptrace: 호출 경로 확인
+        include: refresh, health, beans, httptrace
+
 spring:
   application:
     name: apigateway-service
@@ -15,6 +22,7 @@ spring:
     # 비동기 방식으로 서비스가 동작하기 때문에 Netty 로 서비스가 구동이 됨
     gateway:
       routes:
+        # =========================== user-service LOGIN ===========================
         # user-service POST (로그인)
         - id: user-service
           uri: lb://USER-SERVICE
@@ -27,7 +35,7 @@ spring:
             - RemoveRequestHeader=Cookie
             # 사용자의 요청을 변경하는 처리
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        # user-service POST (회원가입)
+        # =========================== user-service POST ===========================
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -36,7 +44,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        # user-service GET
+        # =========================== user-service GET ===========================
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -45,7 +53,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        # user-service GET
+        # =========================== user-service GET ===========================
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -55,13 +63,12 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - CustomAuthorizationHeaderFilter
-
-#      default-filters:
-#        - name: GlobalFilter
-#          args:
-#            baseMessage: Spring Cloud Gateway GlobalFilter
-#            preLogger: true
-#            postLogger: true
-
-token:
-  secret: user_token
+        # =========================== user-service ACTUATOR ===========================
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
