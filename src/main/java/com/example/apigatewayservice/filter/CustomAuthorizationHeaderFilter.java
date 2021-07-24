@@ -36,8 +36,8 @@ public class CustomAuthorizationHeaderFilter extends AbstractGatewayFilterFactor
                 return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             }
 
-            String authorizationHader = request.getHeaders().get(org.springframework.http.HttpHeaders.AUTHORIZATION).get(0);
-            String jwtToken = authorizationHader.replace("Bearer", "");
+            String authorizationHeader = request.getHeaders().get(org.springframework.http.HttpHeaders.AUTHORIZATION).get(0);
+            String jwtToken = authorizationHeader.replace("Bearer", "");
 
             if (!isJwtValid(jwtToken)) {
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
