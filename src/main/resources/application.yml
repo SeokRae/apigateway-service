@@ -8,13 +8,6 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
 
-management:
-  endpoints:
-    web:
-      exposure:
-        # refresh: 설정정보 갱신, health: 앱 어플 상태 확인, httptrace: 호출 경로 확인
-        include: refresh, health, beans, httptrace
-
 spring:
   application:
     name: apigateway-service
@@ -72,3 +65,17 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+  # Messaging Service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # refresh: 설정정보 갱신, health: 앱 어플 상태 확인, httptrace: 호출 경로 확인
+        include: refresh, health, beans, httptrace, busrefresh
