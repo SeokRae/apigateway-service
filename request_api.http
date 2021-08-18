@@ -1,0 +1,5 @@
+### Health Check
+POST http://localhost:8000/actuator/busrefresh
+
+### user-service Health Check
+GET http://localhost:8000/user-service/health-check

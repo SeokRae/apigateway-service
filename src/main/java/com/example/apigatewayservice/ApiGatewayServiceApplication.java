@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class ApigatewayServiceApplication {
+public class ApiGatewayServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ApigatewayServiceApplication.class, args);
+        SpringApplication.run(ApiGatewayServiceApplication.class, args);
     }
 
     @Bean
